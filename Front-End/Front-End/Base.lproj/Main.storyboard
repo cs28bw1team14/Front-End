@@ -149,11 +149,76 @@
                         <outlet property="southRoomImageView" destination="dNg-YW-qfY" id="1MC-9r-ZuD"/>
                         <outlet property="southWestRoomImageView" destination="pHb-Uv-KOR" id="3Ay-AF-XrB"/>
                         <outlet property="westRoomImageView" destination="JPM-gu-XQj" id="yQb-dm-nX7"/>
+                        <segue destination="woL-dG-ADz" kind="presentation" identifier="LoginModalSegue" modalPresentationStyle="fullScreen" id="nyJ-e6-G42"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="131.8840579710145" y="101.78571428571428"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="Zts-t3-ezr">
+            <objects>
+                <viewController id="woL-dG-ADz" customClass="LoginViewController" customModule="Front_End" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0yt-dj-dtq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="LHr-ML-R69">
+                                <rect key="frame" x="40" y="106" width="334" height="86"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="O7G-gL-SgB">
+                                        <rect key="frame" x="0.0" y="0.0" width="334" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PF6-gt-Ri3">
+                                        <rect key="frame" x="0.0" y="52" width="334" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Fdw-RM-EL7">
+                                <rect key="frame" x="100" y="60" width="214" height="32"/>
+                                <segments>
+                                    <segment title="Sign Up"/>
+                                    <segment title="Login"/>
+                                </segments>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aVL-d7-ng5">
+                                <rect key="frame" x="50" y="210" width="314" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="signUpButtonTapped:" destination="woL-dG-ADz" eventType="touchUpInside" id="05K-Kv-vxS"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Fdw-RM-EL7" firstAttribute="leading" secondItem="ZhK-PU-Dc3" secondAttribute="leading" constant="100" id="6Mw-n2-Z4k"/>
+                            <constraint firstItem="ZhK-PU-Dc3" firstAttribute="trailing" secondItem="LHr-ML-R69" secondAttribute="trailing" constant="40" id="8Wu-Qe-F0J"/>
+                            <constraint firstItem="LHr-ML-R69" firstAttribute="leading" secondItem="ZhK-PU-Dc3" secondAttribute="leading" constant="40" id="8wd-gl-izz"/>
+                            <constraint firstItem="aVL-d7-ng5" firstAttribute="top" secondItem="LHr-ML-R69" secondAttribute="bottom" constant="20" id="DYo-10-Sol"/>
+                            <constraint firstItem="aVL-d7-ng5" firstAttribute="leading" secondItem="ZhK-PU-Dc3" secondAttribute="leading" constant="50" id="Gi1-Yh-xdi"/>
+                            <constraint firstItem="Fdw-RM-EL7" firstAttribute="top" secondItem="ZhK-PU-Dc3" secondAttribute="top" constant="16" id="Lzx-vJ-XgT"/>
+                            <constraint firstItem="ZhK-PU-Dc3" firstAttribute="trailing" secondItem="aVL-d7-ng5" secondAttribute="trailing" constant="50" id="NUA-81-k7r"/>
+                            <constraint firstItem="LHr-ML-R69" firstAttribute="top" secondItem="Fdw-RM-EL7" secondAttribute="bottom" constant="15" id="P0e-IU-Nq0"/>
+                            <constraint firstItem="ZhK-PU-Dc3" firstAttribute="trailing" secondItem="Fdw-RM-EL7" secondAttribute="trailing" constant="100" id="eHz-6t-Y44"/>
+                            <constraint firstItem="Fdw-RM-EL7" firstAttribute="centerX" secondItem="0yt-dj-dtq" secondAttribute="centerX" id="eub-7t-9z1"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ZhK-PU-Dc3"/>
+                    </view>
+                    <connections>
+                        <outlet property="password" destination="PF6-gt-Ri3" id="uGO-xK-W2u"/>
+                        <outlet property="segmentedControl" destination="Fdw-RM-EL7" id="vxC-xE-reC"/>
+                        <outlet property="signUpButton" destination="aVL-d7-ng5" id="sYP-eU-TSa"/>
+                        <outlet property="username" destination="O7G-gL-SgB" id="PwR-Yn-NTg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ev1-l4-enr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1092.753623188406" y="-568.52678571428567"/>
         </scene>
     </scenes>
 </document>

@@ -23,10 +23,16 @@ class MainViewController: UIViewController {
     
     @IBOutlet weak var descriptionTextView: UITextView!
     
+    let apiController = APIController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if apiController.bearer == nil {
+            performSegue(withIdentifier: "LoginModalSegue", sender: self)
+        }
     }
     
     @IBAction func northTapped(_ sender: UIButton) {
@@ -42,14 +48,15 @@ class MainViewController: UIViewController {
         
     }
     
-    /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "LoginModalSegue" {
+            if let loginVC = segue.destination as? LoginViewController {
+                loginVC.apiController = apiController
+            }
+        }
     }
-    */
-
+    
 }
