@@ -28,12 +28,15 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
     }
-    
+    @IBAction func test(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
         guard let apiController = apiController else { return }
         
-        if loginType == .signUp {
+//        if loginType == .signUp use ibaction for segment
+        if segmentedControl.selectedSegmentIndex == 0{
             if let username = username.text, !username.isEmpty, let password = password.text, !password.isEmpty {
                 let user = SignUpUser(username: username, password1: password, password2: password)
                 
@@ -49,6 +52,20 @@ class LoginViewController: UIViewController {
                             
                             alertController.addAction(alertAction)
                             self.present(alertController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        } else {
+            if let username = username.text, !username.isEmpty, let password = password.text, !password.isEmpty {
+                let user = LoginUser(username: username, password: password)
+                
+                apiController.signIn(with: user) { (error) in
+                    if let error = error {
+                        print("Error occured during sign in \(error)")
+                    } else {
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true, completion: nil)
                         }
                     }
                 }

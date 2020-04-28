@@ -10,7 +10,6 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    
     @IBOutlet weak var currentRoomImageView: UIImageView!
     @IBOutlet weak var northRoomImageView: UIImageView!
     @IBOutlet weak var eastRoomImageView: UIImageView!
@@ -58,5 +57,4 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
 }
