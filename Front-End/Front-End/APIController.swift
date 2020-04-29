@@ -23,7 +23,9 @@ enum NetworkError: Error {
 class APIController {
     
     private let baseURL = URL(string: "https://lambda-mud-test.herokuapp.com/")!
-    var bearer: Bearer?
+    
+    var bearer = Bearer(key: "6b7b9d0f33bd76e75b0a52433f268d3037e42e66")
+    var testRoom: TestRoom?
     
     func registerAndSignIn(with user: SignUpUser, completion: @escaping (Error?) -> ()) {
         let signUpUrl = baseURL.appendingPathComponent("api/registration/")
@@ -117,4 +119,58 @@ class APIController {
             completion(nil)
         }.resume()
     }
+    
+    func directionSelected(direction: DirectionMoved, completion: @escaping (Error?) -> ()) {
+        let signInUrl = baseURL.appendingPathComponent("/api/adv/move/")
+//        guard let bearerToken = self.bearer else { return }
+        let bearerToken = self.bearer
+        
+        var request = URLRequest(url: signInUrl)
+        request.httpMethod = HTTPMethod.post.rawValue
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(bearerToken.key, forHTTPHeaderField: "Authorization")
+        
+        
+        let jsonEncoder = JSONEncoder()
+        do {
+            let jsonData = try jsonEncoder.encode(direction)
+            request.httpBody = jsonData
+        } catch {
+            print("Error encoding user object: \(error)")
+            completion(error)
+            return
+        }
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let response = response as? HTTPURLResponse,
+                response.statusCode != 200 {
+                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
+                return
+            }
+            
+            if let error = error {
+                completion(error)
+                return
+            }
+            
+            guard let data = data else {
+                completion(NSError())
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            do {
+                self.testRoom = try decoder.decode(TestRoom.self, from: data)
+                print(String(data: data, encoding: .utf8)!)
+            } catch {
+                print("Error decoding testRoom object: \(error)")
+                completion(error)
+                return
+            }
+            
+            completion(nil)
+        }.resume()
+    }
 }
+
+
+

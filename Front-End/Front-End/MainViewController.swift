@@ -79,7 +79,15 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func northTapped(_ sender: UIButton) {
+        let n = DirectionMoved(direction: "n")
         
+        apiController.directionSelected(direction: n) { (error) in
+            if let error = error {
+                print("Error moving in the north direction: \(error)")
+            } else {
+                print("Movement worked.")
+            }
+        }
     }
     @IBAction func eastTapped(_ sender: UIButton) {
         

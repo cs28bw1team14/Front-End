@@ -35,3 +35,16 @@ struct LoginUser: Codable {
     let username: String
     let password: String
 }
+
+
+struct DirectionMoved: Codable {
+    let direction: String
+}
+
+struct TestRoom: Codable {
+    var name: String
+    var title: String
+    var description: String
+    var players: [String]
+    var error_msg: String
+}
