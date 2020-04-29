@@ -34,6 +34,7 @@ class LoginViewController: UIViewController {
     
     @IBAction func signUpButtonTapped(_ sender: Any) {
         guard let apiController = apiController else { return }
+        apiController.bearer = nil
         
 //        if loginType == .signUp use ibaction for segment
         if segmentedControl.selectedSegmentIndex == 0{

@@ -22,9 +22,9 @@ enum NetworkError: Error {
 
 class APIController {
     
-    private let baseURL = URL(string: "https://lambda-mud-test.herokuapp.com/")!
+    private let baseURL = URL(string: "https://cs-28-django.herokuapp.com/")!
     
-    var bearer = Bearer(key: "6b7b9d0f33bd76e75b0a52433f268d3037e42e66")
+    var bearer: Bearer?
     var testRoom: TestRoom?
     
     func registerAndSignIn(with user: SignUpUser, completion: @escaping (Error?) -> ()) {
@@ -122,8 +122,8 @@ class APIController {
     
     func directionSelected(direction: DirectionMoved, completion: @escaping (Error?) -> ()) {
         let signInUrl = baseURL.appendingPathComponent("/api/adv/move/")
-//        guard let bearerToken = self.bearer else { return }
-        let bearerToken = self.bearer
+        guard let bearerToken = self.bearer else { return }
+//        let bearerToken = self.bearer
         
         var request = URLRequest(url: signInUrl)
         request.httpMethod = HTTPMethod.post.rawValue

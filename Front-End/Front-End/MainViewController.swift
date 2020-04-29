@@ -34,9 +34,9 @@ class MainViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-//        if apiController.bearer == nil {
-//            performSegue(withIdentifier: "LoginModalSegue", sender: self)
-//        }
+        if apiController.bearer == nil {
+            performSegue(withIdentifier: "LoginModalSegue", sender: self)
+        }
     }
     
     func setupImages() {
