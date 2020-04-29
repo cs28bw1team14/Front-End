@@ -43,26 +43,29 @@ class APIController {
             completion(error)
             return
         }
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let response = response as? HTTPURLResponse,
-                response.statusCode != 201 {
-                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
+        let config = URLSessionConfiguration.default
+        config.httpCookieAcceptPolicy = .never
+        config.httpShouldSetCookies = false
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling GET on /todos/1")
+                print(error!)
                 return
             }
-            
-            if let error = error {
-                completion(error)
-                return
-            }
-            
-            guard let data = data else {
-                completion(NSError())
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive data")
                 return
             }
             
             let decoder = JSONDecoder()
             do {
-                self.bearer = try decoder.decode(Bearer.self, from: data)
+                self.bearer = try decoder.decode(Bearer.self, from: responseData)
             } catch {
                 print("Error decoding bearer object: \(error)")
                 completion(error)
@@ -70,9 +73,11 @@ class APIController {
             }
             
             completion(nil)
-        }.resume()
+        }
+        task.resume()
     }
     
+
     func signIn(with user: LoginUser, completion: @escaping (Error?) -> ()) {
         let signInUrl = baseURL.appendingPathComponent("api/login/")
         
@@ -90,26 +95,30 @@ class APIController {
             completion(error)
             return
         }
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let response = response as? HTTPURLResponse,
-                response.statusCode != 200 {
-                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
+        
+        let config = URLSessionConfiguration.default
+        config.httpCookieAcceptPolicy = .never
+        config.httpShouldSetCookies = false
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling GET on /todos/1")
+                print(error!)
                 return
             }
-            
-            if let error = error {
-                completion(error)
-                return
-            }
-            
-            guard let data = data else {
-                completion(NSError())
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive data")
                 return
             }
             
             let decoder = JSONDecoder()
             do {
-                self.bearer = try decoder.decode(Bearer.self, from: data)
+                self.bearer = try decoder.decode(Bearer.self, from: responseData)
             } catch {
                 print("Error decoding bearer object: \(error)")
                 completion(error)
@@ -117,7 +126,8 @@ class APIController {
             }
             
             completion(nil)
-        }.resume()
+        }
+        task.resume()
     }
     
     func directionSelected(direction: DirectionMoved, completion: @escaping (Error?) -> ()) {
