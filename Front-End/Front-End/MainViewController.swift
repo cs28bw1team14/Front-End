@@ -10,27 +10,71 @@ import UIKit
 
 class MainViewController: UIViewController {
     
-    @IBOutlet weak var currentRoomImageView: UIImageView!
-    @IBOutlet weak var northRoomImageView: UIImageView!
-    @IBOutlet weak var eastRoomImageView: UIImageView!
-    @IBOutlet weak var southRoomImageView: UIImageView!
-    @IBOutlet weak var westRoomImageView: UIImageView!
-    @IBOutlet weak var northWestRoomImageView: UIImageView!
-    @IBOutlet weak var northEastRoomImageView: UIImageView!
-    @IBOutlet weak var southWestRoomImageView: UIImageView!
-    @IBOutlet weak var southEastRoomImageView: UIImageView!
-    
+    @IBOutlet weak var characterImageView: UIImageView!
+    @IBOutlet weak var northDoorImageView: UIImageView!
+    @IBOutlet weak var eastDoorImageView: UIImageView!
+    @IBOutlet weak var southDoorImageView: UIImageView!
+    @IBOutlet weak var westDoorImageView: UIImageView!
     @IBOutlet weak var descriptionTextView: UITextView!
     
+    @IBOutlet weak var roomView: UIView!
+    @IBOutlet weak var screenView: UIView!
+    
+    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
+    
     let apiController = APIController()
+    var currentRoom: Room?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupImages()
+        self.currentRoom = room
+        updateDoorViews()
+        updateDescriptionViews()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if apiController.bearer == nil {
-            performSegue(withIdentifier: "LoginModalSegue", sender: self)
+//        if apiController.bearer == nil {
+//            performSegue(withIdentifier: "LoginModalSegue", sender: self)
+//        }
+    }
+    
+    func setupImages() {
+        characterImageView.image = UIImage(named: "stickFigure")
+        northDoorImageView.image = UIImage(named: "door")
+        southDoorImageView.image = UIImage(named: "door")
+        eastDoorImageView.image = UIImage(named: "door")
+        westDoorImageView.image = UIImage(named: "door")
+    }
+    
+    func updateDescriptionViews() {
+        guard let currentRoom = self.currentRoom else { return }
+        descriptionTextView.text = "Current Room: \(currentRoom.name)\nDescription: \(currentRoom.description)\nPlayers: \(currentRoom.players)"
+    }
+    
+    func updateDoorViews() {
+        if currentRoom?.northRoomID != nil{
+            self.northDoorImageView.isHidden = false
+        } else {
+            self.northDoorImageView.isHidden = true
+        }
+        
+        if currentRoom?.southRoomID != nil{
+            self.southDoorImageView.isHidden = false
+        } else {
+            self.southDoorImageView.isHidden = true
+        }
+        
+        if currentRoom?.eastRoomID != nil{
+            self.eastDoorImageView.isHidden = false
+        } else {
+            self.eastDoorImageView.isHidden = true
+        }
+        
+        if currentRoom?.westRoomID != nil{
+            self.westDoorImageView.isHidden = false
+        } else {
+            self.westDoorImageView.isHidden = true
         }
     }
     

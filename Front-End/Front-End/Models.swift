@@ -12,9 +12,11 @@ import Foundation
 struct Room {
     var name: String
     var description: String
-
-
-
+    var northRoomID: Int?
+    var southRoomID: Int?
+    var eastRoomID: Int?
+    var westRoomID: Int?
+    var players: [String] = ["Nar", "Dennis"]
 }
 
 
