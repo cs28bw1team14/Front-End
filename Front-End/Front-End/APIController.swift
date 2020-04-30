@@ -30,13 +30,25 @@ class APIController {
             setCache()
         }
     }
-    var roomData: [Int: Room] = [:]
+    var currentRoom: Room? {
+        didSet {
+            print("Current Room is set \(currentRoom?.n_to)")
+        }
+    }
+    var roomData: [String: Room] = [:]
     var testRoom: TestRoom?
     
     func setCache() {
         guard let rooms = world?.rooms else { return }
         for room in rooms {
-            roomData[room.id] = room
+            roomData[room.title] = room
+        }
+    }
+    
+    func setCurrentRoom(title: String, players: [String]) {
+        if let room = roomData[title] {
+            currentRoom = room
+            currentRoom?.players = players
         }
     }
     
@@ -226,6 +238,50 @@ class APIController {
                 self.world = try decoder.decode(World.self, from: responseData)
             } catch {
                 print("Error decoding world object: \(error)")
+                completion(error)
+                return
+            }
+            
+            completion(nil)
+        }
+        task.resume()
+    }
+    
+    func initializeRoom(completion: @escaping (Error?) -> ()) {
+        let getRoomsURL = baseURL.appendingPathComponent("api/adv/initialize/")
+        
+        var request = URLRequest(url: getRoomsURL)
+        request.httpMethod = HTTPMethod.get.rawValue
+        guard let bearerToken = self.bearer else { return }
+        request.setValue("Token \(bearerToken.key)", forHTTPHeaderField: "Authorization")
+        
+        let config = URLSessionConfiguration.default
+        config.httpCookieAcceptPolicy = .never
+        config.httpShouldSetCookies = false
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling GET on rooms")
+                print(error!)
+                return
+            }
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive room data")
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            do {
+                let room = try decoder.decode(Room.self, from: responseData)
+                print("PLAYERS FROM SERVER\(room.players)")
+                self.setCurrentRoom(title: room.title, players: room.players ?? [])
+            } catch {
+                print("Error decoding room object: \(error)")
                 completion(error)
                 return
             }

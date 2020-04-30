@@ -24,13 +24,19 @@ class MainViewController: UIViewController {
 //    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
     
     let apiController = APIController()
-    var currentRoom: Room?
+    var currentRoom: Room? {
+        didSet{
+            updateDoorViews()
+            updateDescriptionViews()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImages()
         updateDoorViews()
         updateDescriptionViews()
+        hideDoors()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -42,8 +48,16 @@ class MainViewController: UIViewController {
                     print("Error occured during world fetch \(error)")
                 } else {
                     print("World was successfully fetched")
-                    print(self.apiController.roomData[1]?.title)
-                    print(self.apiController.roomData[5]?.title)
+                    self.apiController.initializeRoom { (error) in
+                        if let error = error {
+                            print("Error occured during room fetch \(error) same error")
+                        } else {
+                            DispatchQueue.main.async {
+                                self.currentRoom = self.apiController.currentRoom
+                            }
+                            
+                        }
+                    }
                 }
             }
         }
@@ -58,30 +72,39 @@ class MainViewController: UIViewController {
     }
     
     func updateDescriptionViews() {
-        guard let currentRoom = self.currentRoom else { return }
-        descriptionTextView.text = "Current Room: \(currentRoom.title)\nDescription: \(currentRoom.description)\nPlayers: \(String(describing: currentRoom.players))"
+        guard let currentRoom = self.currentRoom, let players = currentRoom.players else { return }
+        descriptionTextView.text = "Current Room: \(currentRoom.title)\nDescription: \(currentRoom.description)\nPlayers: \(players)"
+    }
+    
+    func hideDoors() {
+        self.characterImageView.isHidden = true
+        self.northDoorImageView.isHidden = true
+        self.southDoorImageView.isHidden = true
+        self.eastDoorImageView.isHidden = true
+        self.westDoorImageView.isHidden = true
     }
     
     func updateDoorViews() {
-        if currentRoom?.n_to != nil{
+        self.characterImageView.isHidden = false
+        if currentRoom?.n_to != 0{
             self.northDoorImageView.isHidden = false
         } else {
             self.northDoorImageView.isHidden = true
         }
         
-        if currentRoom?.s_to != nil{
+        if currentRoom?.s_to != 0{
             self.southDoorImageView.isHidden = false
         } else {
             self.southDoorImageView.isHidden = true
         }
         
-        if currentRoom?.e_to != nil{
+        if currentRoom?.e_to != 0{
             self.eastDoorImageView.isHidden = false
         } else {
             self.eastDoorImageView.isHidden = true
         }
         
-        if currentRoom?.w_to != nil{
+        if currentRoom?.w_to != 0{
             self.westDoorImageView.isHidden = false
         } else {
             self.westDoorImageView.isHidden = true
