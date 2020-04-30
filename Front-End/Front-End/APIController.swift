@@ -25,8 +25,20 @@ class APIController {
     private let baseURL = URL(string: "https://cs-28-django.herokuapp.com/")!
     
     var bearer: Bearer?
-    var world: World?
+    var world: World? {
+        didSet {
+            setCache()
+        }
+    }
+    var roomData: [Int: Room] = [:]
     var testRoom: TestRoom?
+    
+    func setCache() {
+        guard let rooms = world?.rooms else { return }
+        for room in rooms {
+            roomData[room.id] = room
+        }
+    }
     
     func registerAndSignIn(with user: SignUpUser, completion: @escaping (Error?) -> ()) {
         let signUpUrl = baseURL.appendingPathComponent("api/registration/")

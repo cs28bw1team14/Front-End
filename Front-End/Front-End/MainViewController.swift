@@ -42,8 +42,8 @@ class MainViewController: UIViewController {
                     print("Error occured during world fetch \(error)")
                 } else {
                     print("World was successfully fetched")
-                    print(self.apiController.world?.rooms[0].title)
-                    print(self.apiController.world?.rooms[5].title)
+                    print(self.apiController.roomData[1]?.title)
+                    print(self.apiController.roomData[5]?.title)
                 }
             }
         }
@@ -89,6 +89,7 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func northTapped(_ sender: UIButton) {
+        guard currentRoom?.n_to != 0 else { return }
         let n = DirectionMoved(direction: "n")
         
         apiController.directionSelected(direction: n) { (error) in
@@ -100,6 +101,7 @@ class MainViewController: UIViewController {
         }
     }
     @IBAction func eastTapped(_ sender: UIButton) {
+        guard currentRoom?.e_to != 0 else { return }
         let e = DirectionMoved(direction: "e")
         
         apiController.directionSelected(direction: e) { (error) in
@@ -111,6 +113,7 @@ class MainViewController: UIViewController {
         }
     }
     @IBAction func southButton(_ sender: UIButton) {
+        guard currentRoom?.s_to != 0 else { return }
         let s = DirectionMoved(direction: "s")
         
         apiController.directionSelected(direction: s) { (error) in
@@ -122,6 +125,7 @@ class MainViewController: UIViewController {
         }
     }
     @IBAction func westTapped(_ sender: UIButton) {
+        guard currentRoom?.w_to != 0 else { return }
         let w = DirectionMoved(direction: "w")
         
         apiController.directionSelected(direction: w) { (error) in
