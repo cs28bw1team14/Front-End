@@ -25,6 +25,7 @@ class APIController {
     private let baseURL = URL(string: "https://cs-28-django.herokuapp.com/")!
     
     var bearer: Bearer?
+    var world: World?
     var testRoom: TestRoom?
     
     func registerAndSignIn(with user: SignUpUser, completion: @escaping (Error?) -> ()) {
@@ -179,6 +180,47 @@ class APIController {
             
             completion(nil)
         }.resume()
+    }
+    
+    func getRooms(completion: @escaping (Error?) -> ()) {
+        let getRoomsURL = baseURL.appendingPathComponent("api/adv/get_rooms/")
+        
+        var request = URLRequest(url: getRoomsURL)
+        request.httpMethod = HTTPMethod.get.rawValue
+        request.setValue(self.bearer?.key, forHTTPHeaderField: "Authorization")
+        
+        let config = URLSessionConfiguration.default
+        config.httpCookieAcceptPolicy = .never
+        config.httpShouldSetCookies = false
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling GET on rooms")
+                print(error!)
+                return
+            }
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive room data")
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            do {
+                self.world = try decoder.decode(World.self, from: responseData)
+            } catch {
+                print("Error decoding world object: \(error)")
+                completion(error)
+                return
+            }
+            
+            completion(nil)
+        }
+        task.resume()
     }
 }
 

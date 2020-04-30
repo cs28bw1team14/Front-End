@@ -9,14 +9,19 @@
 import Foundation
 
 
-struct Room {
-    var name: String
+struct Room: Codable {
+    var id: Int
+    var title: String
     var description: String
-    var northRoomID: Int?
-    var southRoomID: Int?
-    var eastRoomID: Int?
-    var westRoomID: Int?
-    var players: [String] = ["Nar", "Dennis"]
+    var n_to: Int
+    var s_to: Int
+    var e_to: Int
+    var w_to: Int
+    var players: [String]?
+}
+
+struct World: Codable {
+    var rooms: [Room]
 }
 
 

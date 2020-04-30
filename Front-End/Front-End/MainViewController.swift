@@ -20,7 +20,8 @@ class MainViewController: UIViewController {
     @IBOutlet weak var roomView: UIView!
     @IBOutlet weak var screenView: UIView!
     
-    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
+    //Test Room
+//    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
     
     let apiController = APIController()
     var currentRoom: Room?
@@ -28,7 +29,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupImages()
-        self.currentRoom = room
         updateDoorViews()
         updateDescriptionViews()
     }
@@ -36,6 +36,16 @@ class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         if apiController.bearer == nil {
             performSegue(withIdentifier: "LoginModalSegue", sender: self)
+        } else {
+            self.apiController.getRooms { (error) in
+                if let error = error {
+                    print("Error occured during world fetch \(error)")
+                } else {
+                    print("World was successfully fetched")
+                    print(self.apiController.world?.rooms[0].title)
+                    print(self.apiController.world?.rooms[5].title)
+                }
+            }
         }
     }
     
@@ -49,29 +59,29 @@ class MainViewController: UIViewController {
     
     func updateDescriptionViews() {
         guard let currentRoom = self.currentRoom else { return }
-        descriptionTextView.text = "Current Room: \(currentRoom.name)\nDescription: \(currentRoom.description)\nPlayers: \(currentRoom.players)"
+        descriptionTextView.text = "Current Room: \(currentRoom.title)\nDescription: \(currentRoom.description)\nPlayers: \(String(describing: currentRoom.players))"
     }
     
     func updateDoorViews() {
-        if currentRoom?.northRoomID != nil{
+        if currentRoom?.n_to != nil{
             self.northDoorImageView.isHidden = false
         } else {
             self.northDoorImageView.isHidden = true
         }
         
-        if currentRoom?.southRoomID != nil{
+        if currentRoom?.s_to != nil{
             self.southDoorImageView.isHidden = false
         } else {
             self.southDoorImageView.isHidden = true
         }
         
-        if currentRoom?.eastRoomID != nil{
+        if currentRoom?.e_to != nil{
             self.eastDoorImageView.isHidden = false
         } else {
             self.eastDoorImageView.isHidden = true
         }
         
-        if currentRoom?.westRoomID != nil{
+        if currentRoom?.w_to != nil{
             self.westDoorImageView.isHidden = false
         } else {
             self.westDoorImageView.isHidden = true
@@ -90,13 +100,37 @@ class MainViewController: UIViewController {
         }
     }
     @IBAction func eastTapped(_ sender: UIButton) {
+        let e = DirectionMoved(direction: "e")
         
+        apiController.directionSelected(direction: e) { (error) in
+            if let error = error {
+                print("Error moving in the north direction: \(error)")
+            } else {
+                print("Movement worked.")
+            }
+        }
     }
     @IBAction func southButton(_ sender: UIButton) {
+        let s = DirectionMoved(direction: "s")
         
+        apiController.directionSelected(direction: s) { (error) in
+            if let error = error {
+                print("Error moving in the north direction: \(error)")
+            } else {
+                print("Movement worked.")
+            }
+        }
     }
     @IBAction func westTapped(_ sender: UIButton) {
+        let w = DirectionMoved(direction: "w")
         
+        apiController.directionSelected(direction: w) { (error) in
+            if let error = error {
+                print("Error moving in the north direction: \(error)")
+            } else {
+                print("Movement worked.")
+            }
+        }
     }
     
     // MARK: - Navigation
