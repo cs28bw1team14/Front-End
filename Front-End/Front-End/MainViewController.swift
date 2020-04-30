@@ -21,7 +21,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var screenView: UIView!
     
     //Test Room
-//    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
+    //    var room = Room(name: "Starting Room", description: "The first Room", northRoomID: nil, southRoomID: 1234, eastRoomID: 4312, westRoomID: nil)
     
     let apiController = APIController()
     var currentRoom: Room? {
@@ -64,7 +64,7 @@ class MainViewController: UIViewController {
     }
     
     func setupImages() {
-        characterImageView.image = UIImage(named: "stickFigure")
+        characterImageView.image = UIImage(named: "test")
         northDoorImageView.image = UIImage(named: "door")
         southDoorImageView.image = UIImage(named: "door")
         eastDoorImageView.image = UIImage(named: "door")
@@ -112,7 +112,13 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func northTapped(_ sender: UIButton) {
-        guard currentRoom?.n_to != 0 else { return }
+        guard currentRoom?.n_to != 0 else {
+            let cannotMoveAlert = UIAlertController(title: "You can't move this direction!", message: "Choose another way!", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Okay!", style: .cancel, handler: nil)
+            cannotMoveAlert.addAction(alertAction)
+            self.present(cannotMoveAlert, animated: true, completion: nil)
+            return }
+        
         let n = DirectionMoved(direction: "n")
         
         apiController.directionSelected(direction: n) { (error) in
@@ -120,42 +126,64 @@ class MainViewController: UIViewController {
                 print("Error moving in the north direction: \(error)")
             } else {
                 print("Movement worked.")
+                self.currentRoom = self.apiController.currentRoom
             }
         }
     }
     @IBAction func eastTapped(_ sender: UIButton) {
-        guard currentRoom?.e_to != 0 else { return }
+        guard currentRoom?.e_to != 0 else {
+            let cannotMoveAlert = UIAlertController(title: "You can't move this direction!", message: "Choose another way!", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Okay!", style: .cancel, handler: nil)
+            cannotMoveAlert.addAction(alertAction)
+            self.present(cannotMoveAlert, animated: true, completion: nil)
+            return }
+        
         let e = DirectionMoved(direction: "e")
         
         apiController.directionSelected(direction: e) { (error) in
             if let error = error {
-                print("Error moving in the north direction: \(error)")
+                print("Error moving in the east direction: \(error)")
             } else {
                 print("Movement worked.")
+                self.currentRoom = self.apiController.currentRoom
             }
         }
     }
     @IBAction func southButton(_ sender: UIButton) {
-        guard currentRoom?.s_to != 0 else { return }
+        guard currentRoom?.s_to != 0 else {
+            let cannotMoveAlert = UIAlertController(title: "You can't move this direction!", message: "Choose another way!", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Okay!", style: .cancel, handler: nil)
+            cannotMoveAlert.addAction(alertAction)
+            self.present(cannotMoveAlert, animated: true, completion: nil)
+            return }
+        
         let s = DirectionMoved(direction: "s")
         
         apiController.directionSelected(direction: s) { (error) in
             if let error = error {
-                print("Error moving in the north direction: \(error)")
+                print("Error moving in the south direction: \(error)")
             } else {
                 print("Movement worked.")
+                self.currentRoom = self.apiController.currentRoom
             }
         }
     }
     @IBAction func westTapped(_ sender: UIButton) {
-        guard currentRoom?.w_to != 0 else { return }
+        guard currentRoom?.w_to != 0 else {
+            let cannotMoveAlert = UIAlertController(title: "You can't move this direction!", message: "Choose another way!", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "Okay!", style: .cancel, handler: nil)
+            cannotMoveAlert.addAction(alertAction)
+            self.present(cannotMoveAlert, animated: true, completion: nil)
+            return }
+        
         let w = DirectionMoved(direction: "w")
         
         apiController.directionSelected(direction: w) { (error) in
             if let error = error {
-                print("Error moving in the north direction: \(error)")
+                print("Error moving in the west direction: \(error)")
             } else {
                 print("Movement worked.")
+                self.currentRoom = self.apiController.currentRoom
             }
         }
     }

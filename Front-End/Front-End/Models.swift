@@ -19,6 +19,7 @@ struct Room: Codable {
     var w_to: Int?
     var players: [String]?
     var uuid: String?
+    var error_msg: String?
 }
 
 struct World: Codable {

@@ -30,11 +30,8 @@ class APIController {
             setCache()
         }
     }
-    var currentRoom: Room? {
-        didSet {
-            print("Current Room is set \(currentRoom?.n_to)")
-        }
-    }
+    var currentRoom: Room?
+
     var roomData: [String: Room] = [:]
     var testRoom: TestRoom?
     
@@ -163,8 +160,7 @@ class APIController {
         var request = URLRequest(url: signInUrl)
         request.httpMethod = HTTPMethod.post.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue(bearerToken.key, forHTTPHeaderField: "Authorization")
-        
+        request.setValue("Token \(bearerToken.key)", forHTTPHeaderField: "Authorization")
         
         let jsonEncoder = JSONEncoder()
         do {
@@ -194,8 +190,10 @@ class APIController {
             
             let decoder = JSONDecoder()
             do {
-                self.testRoom = try decoder.decode(TestRoom.self, from: data)
+               let newRoom = try decoder.decode(Room.self, from: data)
                 print(String(data: data, encoding: .utf8)!)
+                self.updateCurrentRoomAvailableDirections(newRoom: newRoom)
+
             } catch {
                 print("Error decoding testRoom object: \(error)")
                 completion(error)
@@ -290,6 +288,16 @@ class APIController {
         }
         task.resume()
     }
+    
+    func updateCurrentRoomAvailableDirections(newRoom: Room) {
+        self.currentRoom?.n_to = roomData[newRoom.title]?.n_to
+        self.currentRoom?.e_to = roomData[newRoom.title]?.e_to
+        self.currentRoom?.s_to = roomData[newRoom.title]?.s_to
+        self.currentRoom?.w_to = roomData[newRoom.title]?.w_to
+    }
+
+
+
 }
 
 
