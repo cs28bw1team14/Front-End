@@ -27,6 +27,7 @@ class MainViewController: UIViewController {
     var currentRoom: Room? {
         didSet{
             updateDoorViews()
+            print(currentRoom?.title)
             updateDescriptionViews()
         }
     }
@@ -72,8 +73,9 @@ class MainViewController: UIViewController {
     }
     
     func updateDescriptionViews() {
-        guard let currentRoom = self.currentRoom, let players = currentRoom.players else { return }
-        descriptionTextView.text = "Current Room: \(currentRoom.title)\nDescription: \(currentRoom.description)\nPlayers: \(players)"
+//        guard let currentRoom = self.currentRoom, let players = currentRoom.players else { return }
+        guard let currentRoom = self.apiController.currentRoom else { return }
+        descriptionTextView.text = "Current Room: \(currentRoom.title)\nDescription: \(currentRoom.description)\nPlayers: \(currentRoom.players ?? [])"
     }
     
     func hideDoors() {

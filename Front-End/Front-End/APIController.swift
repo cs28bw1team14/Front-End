@@ -302,7 +302,7 @@ class APIController {
         self.currentRoom?.w_to = roomData[newRoom.title]?.w_to
         self.currentRoom?.description = roomData[newRoom.title]?.description ?? ""
         self.currentRoom?.title = roomData[newRoom.title]?.title ?? ""
-        self.currentRoom?.players = roomData[newRoom.title]?.players
+        self.currentRoom?.players = newRoom.players
     }
 
 
