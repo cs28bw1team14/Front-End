@@ -126,7 +126,10 @@ class MainViewController: UIViewController {
                 print("Error moving in the north direction: \(error)")
             } else {
                 print("Movement worked.")
-                self.currentRoom = self.apiController.currentRoom
+                DispatchQueue.main.async {
+                    self.currentRoom = self.apiController.currentRoom
+                    self.updateDescriptionViews()
+                }
             }
         }
     }
@@ -145,7 +148,10 @@ class MainViewController: UIViewController {
                 print("Error moving in the east direction: \(error)")
             } else {
                 print("Movement worked.")
-                self.currentRoom = self.apiController.currentRoom
+                DispatchQueue.main.async {
+                    self.currentRoom = self.apiController.currentRoom
+                    self.updateDescriptionViews()
+                }
             }
         }
     }
@@ -164,7 +170,10 @@ class MainViewController: UIViewController {
                 print("Error moving in the south direction: \(error)")
             } else {
                 print("Movement worked.")
-                self.currentRoom = self.apiController.currentRoom
+                DispatchQueue.main.async {
+                    self.currentRoom = self.apiController.currentRoom
+                    self.updateDescriptionViews()
+                }
             }
         }
     }
@@ -183,7 +192,10 @@ class MainViewController: UIViewController {
                 print("Error moving in the west direction: \(error)")
             } else {
                 print("Movement worked.")
-                self.currentRoom = self.apiController.currentRoom
+                DispatchQueue.main.async {
+                    self.currentRoom = self.apiController.currentRoom
+                    self.updateDescriptionViews()
+                }
             }
         }
     }

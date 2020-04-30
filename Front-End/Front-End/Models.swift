@@ -20,6 +20,7 @@ struct Room: Codable {
     var players: [String]?
     var uuid: String?
     var error_msg: String?
+    var name: String?
 }
 
 struct World: Codable {
@@ -49,7 +50,7 @@ struct LoginUser: Codable {
 
 
 struct DirectionMoved: Codable {
-    let direction: String
+    var direction: String
 }
 
 struct TestRoom: Codable {

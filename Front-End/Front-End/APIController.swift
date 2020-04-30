@@ -153,7 +153,7 @@ class APIController {
     }
     
     func directionSelected(direction: DirectionMoved, completion: @escaping (Error?) -> ()) {
-        let signInUrl = baseURL.appendingPathComponent("/api/adv/move/")
+        let signInUrl = baseURL.appendingPathComponent("api/adv/move/")
         guard let bearerToken = self.bearer else { return }
 //        let bearerToken = self.bearer
         
@@ -165,43 +165,49 @@ class APIController {
         let jsonEncoder = JSONEncoder()
         do {
             let jsonData = try jsonEncoder.encode(direction)
+            print(String(data: jsonData, encoding: .utf8)!)
             request.httpBody = jsonData
         } catch {
             print("Error encoding user object: \(error)")
             completion(error)
             return
         }
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let response = response as? HTTPURLResponse,
-                response.statusCode != 200 {
-                completion(NSError(domain: "", code: response.statusCode, userInfo:nil))
+        
+        let config = URLSessionConfiguration.default
+        config.httpCookieAcceptPolicy = .never
+        config.httpShouldSetCookies = false
+        let session = URLSession(configuration: config)
+        
+        // make the request
+        let task = session.dataTask(with: request) {
+            (data, response, error) in
+            // check for any errors
+            guard error == nil else {
+                print("error calling GET on /todos/1")
+                print(error!)
                 return
             }
-            
-            if let error = error {
-                completion(error)
-                return
-            }
-            
-            guard let data = data else {
-                completion(NSError())
+            // make sure we got data
+            guard let responseData = data else {
+                print("Error: did not receive data")
                 return
             }
             
             let decoder = JSONDecoder()
+            print("JSON from server for new room:\(String(data: responseData, encoding: String.Encoding.utf8)!)")
             do {
-               let newRoom = try decoder.decode(Room.self, from: data)
-                print(String(data: data, encoding: .utf8)!)
+                let newRoom = try decoder.decode(Room.self, from: responseData)
                 self.updateCurrentRoomAvailableDirections(newRoom: newRoom)
-
+                
             } catch {
-                print("Error decoding testRoom object: \(error)")
+                print("Error decoding new room object from move: \(error)")
                 completion(error)
                 return
             }
             
             completion(nil)
-        }.resume()
+        }
+        task.resume()
     }
     
     func getRooms(completion: @escaping (Error?) -> ()) {
@@ -294,6 +300,9 @@ class APIController {
         self.currentRoom?.e_to = roomData[newRoom.title]?.e_to
         self.currentRoom?.s_to = roomData[newRoom.title]?.s_to
         self.currentRoom?.w_to = roomData[newRoom.title]?.w_to
+        self.currentRoom?.description = roomData[newRoom.title]?.description ?? ""
+        self.currentRoom?.title = roomData[newRoom.title]?.title ?? ""
+        self.currentRoom?.players = roomData[newRoom.title]?.players
     }
 
 
